@@ -4,7 +4,7 @@
 
 typedef struct{
 
-    std::string _name;
+    char _name[12];
     int _firstBlock;
     int _type;
 

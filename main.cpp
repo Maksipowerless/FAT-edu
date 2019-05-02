@@ -5,7 +5,6 @@
 int main()
 {
     FileSystemDriver driver("/home/maxfromperek/Downloads/v4.dat");
-    //driver.printFileBlockChain();
     char ch_key;
     char anyKey;
     bool bMENU = true;
@@ -13,12 +12,12 @@ int main()
     {
         if(ch_key != '\n'){
             cout << "\033c";
-            cout<<"***MENU***\n";
+            cout<<"***MENU***\n\n";
             cout<<"1 - print superblock info\n";
             cout<<"2 - print root directory \n";
             cout<<"3 - print FAT table \n";
-            cout<<"4 - pynkt menu 1\n";
-            cout<<"5 - pynkt menu 1\n";
+            cout<<"4 - print file \n";
+            cout<<"5 - print FS tree\n";
             cout<<"6 - pynkt menu 1\n";
             cout<<"0 - close driver\n";
         }
@@ -49,16 +48,32 @@ int main()
                 anyKey = getchar();
             break;
         case '4':
-            // p4();
+            cout << "\033c";
+            driver.printFile();
+            cout << "Press ENTER to continue...";
+            anyKey = getchar();
+            if(anyKey == '\n')
+                anyKey = getchar();
             break;
         case '5':
-            // p5();
+            cout << "\033c";
+            driver.printFSTree();
+            cout << "Press ENTER to continue...";
+            anyKey = getchar();
+            if(anyKey == '\n')
+                anyKey = getchar();
+            break;
+        case '6':
+            cout << "\033c";
+            driver.saveFile();
+            cout << "Press ENTER to continue...";
+            anyKey = getchar();
+            if(anyKey == '\n')
+                anyKey = getchar();
             break;
         case '0':
             bMENU = false;
             cout<<"Exit from program\n";
-            break;
-        case 10:
             break;
         default:
             cout<<"Unsupported key was pressed\n";
@@ -66,7 +81,5 @@ int main()
         }
     }
     return 0;
-
-
 }
 
