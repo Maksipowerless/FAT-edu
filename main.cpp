@@ -18,7 +18,7 @@ int main()
             cout<<"3 - print FAT table \n";
             cout<<"4 - print file \n";
             cout<<"5 - print FS tree\n";
-            cout<<"6 - pynkt menu 1\n";
+            cout<<"6 - save file\n";
             cout<<"0 - close driver\n";
         }
         switch((ch_key = getchar()))

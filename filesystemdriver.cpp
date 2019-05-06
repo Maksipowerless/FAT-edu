@@ -162,21 +162,26 @@ void FileSystemDriver::printFile(){
             }
             cout << text;
         }
-
     }
-
 }
 
 
 void FileSystemDriver::saveFile(){
     vector<File> regFiles;
+    vector<string> path;
 
     for(int i = 0; i < _files.size(); i++){ // поиск всех фвйлов
         if(strcmp(_files[i]._name, "")){
-            if(_files[i]._type == 0)
+            if(_files[i]._type == 0){
                 regFiles.insert(regFiles.end(), _files[i]);
+                string str = "/";
+                str += _files[i]._name;
+                path.push_back(str);
+            }
             else{
-                recurciveFindFiles(_files[i]._firstBlock, regFiles);
+                string str = "/";
+                str +=_files[i]._name;
+                recurciveFindFiles(_files[i]._firstBlock, regFiles, str, path);
             }
         }
     }
@@ -185,8 +190,8 @@ void FileSystemDriver::saveFile(){
     bool flag = true;
     while(flag){
         cout << "***SAVE FILE***:" << "\n\n";
-        for(int i = 0; i < regFiles.size(); i++){
-            cout << i+1 << ": " << regFiles[i]._name << "\n";
+        for(int i = 0; i < path.size(); i++){
+            cout << i+1 << ": " << path[i] << "\n";
         }
         cout << "Enter the file name. For exit enter 'quit'\n";
         cin >> command;
@@ -196,7 +201,7 @@ void FileSystemDriver::saveFile(){
             string fileName;
             fileName += command;
             for(int i = 0; i < regFiles.size(); i++){
-                if(!strcmp(regFiles[i]._name, command )){
+                if(!strcmp(path[i].c_str(), command )){
                     vector<int> fileChain = getBlockChainFAT(regFiles[i]._firstBlock);
 
                     string path = "/home/maxfromperek/";
@@ -217,7 +222,7 @@ void FileSystemDriver::saveFile(){
                         for(int i = 0; i < _superBlock->_blockSize; i++){
                             fread(cPointer, sizeof(char), 1, fs);
 
-                            if(fileName.find(".jpg") == -1 && *cPointer == 0)
+                            if(fileName.find(".jpg") == -1 && *cPointer == 0) // в картинке не стоит удалять нулевые символы
                                     break;
                             char symb = *cPointer - _superBlock->_encryptionShift;
                             myfile << symb;
@@ -238,7 +243,7 @@ void FileSystemDriver::saveFile(){
     }
 }
 
-void FileSystemDriver::recurciveFindFiles(int firstBlock, vector<File>& regFiles){
+void FileSystemDriver::recurciveFindFiles(int firstBlock, vector<File>& regFiles, string parent, vector<string>& path){
 
     vector<int> fileChainFAT = getBlockChainFAT(firstBlock);
     for(int i = 0; i < fileChainFAT.size(); i++){
@@ -257,9 +262,13 @@ void FileSystemDriver::recurciveFindFiles(int firstBlock, vector<File>& regFiles
                 if(file->_type == 0)
                 {
                     regFiles.insert(regFiles.end(), *file);
+                    string str = parent + "/" + file->_name;
+                    path.push_back(str);
                 }
                 else{
-                    recurciveFindFiles(file->_firstBlock, regFiles);
+                    parent += "/";
+                    parent += file->_name;
+                    recurciveFindFiles(file->_firstBlock, regFiles, parent, path);
                 }
             }
         }

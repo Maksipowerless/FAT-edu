@@ -35,7 +35,7 @@ public:
      vector<int> getBlockChainFAT(int firstBlock);
      void recurciveDirectoryPrint(int shift, int firstBlock);
      void saveFile();
-     void recurciveFindFiles(int firstBlock, vector<File>& regFiles);
+     void recurciveFindFiles(int firstBlock, vector<File>& regFiles, string parent, vector<string>& path);
 
 };
 
